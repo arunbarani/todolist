@@ -1,0 +1,14 @@
+{
+    "__comment__": "<!--  dataSource : [jsonfile / mongodb]   -->",
+
+
+    "dataSource": "jsonfile",
+    "fileConfig": {
+        "fileURL": "server/data.json"
+    },
+    "dbConfig": {
+        "host": "localhost",
+        "port": "27017",
+        "db": "TodoDB"
+    }
+}
