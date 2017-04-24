@@ -1,6 +1,6 @@
 import * as TodoActions from "../actions/todoActions";
 import todoReducer from "../reducers/todos";
-import { TODO_ACTIONS, TODO_FILTERS } from "../config/constants";
+import { TODO_ACTIONS, TODO_FILTERS } from "../data/constants";
 import { deepCopy } from "../utils/Utils"
 
 
