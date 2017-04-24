@@ -1,11 +1,11 @@
 # Todolist
 
-<h4>Want to see how it looks before setup and run it in local, click <a href="https://todolist-ooyala-challange.appspot.com/" target="_blank">HERE</a>.</h4>
+<h4>Want to see how it looks before setup and run it in local, click <a href="https://todolist-ooyala-challenge.appspot.com/" target="_blank">HERE</a>.</h4>
 
 <h3>Setup</h3>
 <ul>
-  <li> Clone or download <a href="https://github.com/arunbarani/todolist-ooyala-challange.git">todolist-ooyala-challange.</a> </li>
-  <li> Navigate to todolist-ooyala-challange in CMD. </li>
+  <li> Clone or download <a href="https://github.com/arunbarani/todolist-ooyala-challenge.git">todolist-ooyala-challenge.</a> </li>
+  <li> Navigate to todolist-ooyala-challenge in CMD. </li>
   <li> Run following npm commands. It will install all the dependency node modules.</li>
   <ul>
       <li>npm install.</li>
