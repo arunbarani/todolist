@@ -1,6 +1,6 @@
 # Todolist
 
-<h4>Want to see how it looks before setup and run it in local, click <a href="https://todolist-ooyala-challenge.appspot.com/" target="_blank">HERE</a>.</h4>
+<h4>Want to see how it looks before setup and run it in local, click <a href="https://todolist-ooyala-challenge.appspot.com/" target="_blank">here</a>.</h4>
 
 <h3>Setup</h3>
 <ul>
@@ -46,7 +46,7 @@
 <p>By default its set to Json File.</p>
 <h5> Configure to Mongo DB in <a href="https://github.com/arunbarani/todolist-ooyala-challenge/blob/master/server/config.json">server/config.json</a></h5>
 <ul>
-<li> Change dataSource to mongodb </li>
+<li> Change <b>dataSource</b> to <b>mongodb</b> </li>
 <li> Create db called <b>TodoDB</b> or create your own db and configure it in <b>db</b> property</li>
 <li> Create collection called <b>counters</b>. This is to create auto increment field. By default <a href="https://docs.mongodb.com/v3.0/tutorial/create-an-auto-incrementing-field/"> mongodb doesn't support auto increment field </a>
 <li> Insert below document in to <b>counters</b> collection.</li>
