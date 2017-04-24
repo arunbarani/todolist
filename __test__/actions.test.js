@@ -1,5 +1,5 @@
 import * as TodoActions from "../actions/todoActions";
-import { TODO_ACTIONS } from "../config/constants"
+import { TODO_ACTIONS } from "../data/constants"
 
 const todos = [{	id : 1,
 						text : "One",
