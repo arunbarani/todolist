@@ -8,8 +8,8 @@
   <li> Navigate to todolist-ooyala-challenge in CMD. </li>
   <li> Run following npm commands. It will install all the dependency node modules.</li>
   <ul>
-      <li>npm install.</li>
-      <li>npm install webpack.</li>
+      <li>npm install</li>
+      <li>npm install -g webpack</li>
   </ul>
 </ul>
 
@@ -44,30 +44,32 @@
 <li>Mongo DB </li>
 </ol>
 <p>By default its set to Json File.</p>
-<h5> Configure to Mongo DB </h5>
+<h5> Configure to Mongo DB in <a href="https://github.com/arunbarani/todolist-ooyala-challenge/blob/master/server/config.json">server/config.json</a></h5>
 <ul>
-<li> Install <a href="https://docs.mongodb.com/manual/administration/install-community/">MongoDB</a> </li>
-<li> <a href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#run-mongodb-community-edition">Setup and run</a> MongoDB </li>
-<li> Create db called <b>TodoDB</b> or create your own db and configure it in <b>db</b> property of <b>server/config.json</b> </li>
 <li> Change dataSource to mongodb </li>
+<li> Create db called <b>TodoDB</b> or create your own db and configure it in <b>db</b> property</li>
+<li> Create collection called <b>counters</b>. This is to create auto increment field. By default <a href="https://docs.mongodb.com/v3.0/tutorial/create-an-auto-incrementing-field/"> mongodb doesn't support auto increment field </a>
+<li> Insert below document in to <b>counters</b> collection.</li>
+<li><ul>
+<li><pre>({ "_id" : "todo", "todoId" : 0 })</pre></li>
+</ul></li>
 <li> Run application</li>
 </ul>
 
 <h5>config.json</h5>
 <pre>
    {
-     "__comment__": "dataSource : [jsonfile / mongodb]",
+      "__comment__": "dataSource : [jsonfile / mongodb]",
 
       "dataSource": "jsonfile",
       "fileConfig": {
           "fileURL": "server/data.json"
       },
       "dbConfig": {
-          "host": "localhost",
-          "port": "27017",
+          "connectionStr": "mongodb://localhost:27017",
           "db": "TodoDB"
       }
-    }
+  }
 </pre>
 
 <h5>Libraries used</h5>
