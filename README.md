@@ -48,7 +48,7 @@
 <ul>
 <li> Change <b>dataSource</b> to <b>mongodb</b> </li>
 <li> Create db called <b>TodoDB</b> or create your own db and configure it in <b>db</b> property</li>
-<li> Create collection called <b>counters</b>. This is to create auto increment field. By default <a href="https://docs.mongodb.com/v3.0/tutorial/create-an-auto-incrementing-field/"> mongodb doesn't support auto increment field </a>
+<li> Create collection called <b>counters</b>. This is to create <a href="https://docs.mongodb.com/v3.0/tutorial/create-an-auto-incrementing-field/">auto increment id</a>. </li>
 <li> Insert below document in to <b>counters</b> collection.</li>
 <li><ul>
 <li><pre>({ "_id" : "todo", "todoId" : 0 })</pre></li>
