@@ -9,7 +9,7 @@ const URL = getDbUrl();
 function getDbUrl(){
     var config = jsonfile.readFileSync("server/config.json");
 
-    return "mongodb://" + config.dbConfig.host + ":" + config.dbConfig.port + "/" + config.dbConfig.db;
+    return config.dbConfig.connectionStr + "/" + config.dbConfig.db;
 }
 
 
