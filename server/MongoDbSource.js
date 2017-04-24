@@ -1,7 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const mongojs = require('mongojs');
 const jsonfile = require("jsonFile");
-var URL = getDbUrl();
+const URL = getDbUrl();
 
 /*
  * Get DB URL from config.json
