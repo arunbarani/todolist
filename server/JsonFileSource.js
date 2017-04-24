@@ -1,5 +1,5 @@
 const jsonfile = require('jsonfile');
-var URL =  getFileUrl();
+const URL =  getFileUrl();
 
 
 /*
