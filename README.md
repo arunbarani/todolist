@@ -1,6 +1,6 @@
 # Todolist
 
-<h4>Want to see how it looks before setup and run it in local, click <a href="https://todolist-ooyala-challenge.appspot.com/" target="_blank">here</a>.</h4>
+<h4>Want to see how it looks before setup and run it in local, click <a href="https://todolist-ooyala-challange.appspot.com/" target="_blank">here</a>.</h4>
 
 <h3>Setup</h3>
 <ul>
