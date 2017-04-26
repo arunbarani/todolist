@@ -56,7 +56,9 @@ function toggleTodo(data, callback) {
             }
         }
 
-        toggleItem.completed = !toggleItem.completed;
+        if (toggleItem) {
+             toggleItem.completed = !toggleItem.completed;
+        }
 
         writeFile(URL, content, () => {
             callback(toggleItem);
@@ -78,9 +80,11 @@ function editTodo(data, callback) {
             }
         }
 
-        Object.keys(editItem).forEach(function (item) {
-            editItem[item] = data[item];
-        });
+         if (editItem){
+            Object.keys(editItem).forEach(function (item) {
+                editItem[item] = data[item];
+            });
+        }
 
         writeFile(URL, content, () => {
             callback(editItem);
