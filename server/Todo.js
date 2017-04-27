@@ -7,7 +7,7 @@ const TodoSource = getDataSource();
 /*
  * Load data source based on configuration from config.json file.
  */
-function getDataSource(){
+function getDataSource() {
     let config = jsonfile.readFileSync("server/config.json");
 
     return config.dataSource == "jsonfile" ? require("./JsonFileSource") : require("./MongoDbSource");
@@ -16,52 +16,78 @@ function getDataSource(){
 /*
  * Get all todo for initial load
  */
-router.get("/getTodo", function(req, res){
-    let content = TodoSource.readTodo(function(data){
-        return res.json(data)
+router.get("/getTodo",  (req, res) => {
+    let content = TodoSource.readTodo( (error, data) => {
+        if (error) {
+            console.error("Error while retrieving todos", error);
+            res.status(500).send(error);
+        } else {
+            return res.json(data);
+        }
+
     });
 });
 
 /*
  * Add todo
  */
-router.post("/addTodo", function(req, res){
+router.post("/addTodo",  (req, res) => {
     let data = req.body;
-    let newItem = TodoSource.addTodo(data, function(data){
-        return res.json(data);
+    let newItem = TodoSource.addTodo(data, (error, data) => {
+        if (error) {
+            console.error("Error while add todo", error);
+            res.status(500).send(error)
+        } else {
+            return res.json(data);
+        }
     });
-    
+
 });
 
 /*
  * Toggle the completion status of todo
  */
-router.post("/toggleTodo", function(req, res){
+router.post("/toggleTodo", (req, res) => {
     let data = req.body;
-    let toggleItem = TodoSource.toggleTodo(data, function(data){
-        return res.json(data);
+    let toggleItem = TodoSource.toggleTodo(data, (error, data) => {
+        if (error) {
+            console.error("Error while toggle todo", error);
+            res.status(500).send(error)
+        } else {
+            return res.json(data);
+        }
     });
 });
 
 /*
  * Edit todo
  */
-router.post("/editTodo", function(req, res){
+router.post("/editTodo",  (req, res) => {
     let data = req.body;
-    let editItem = TodoSource.editTodo(data, function(data){
-        return res.json(data);
+    let editItem = TodoSource.editTodo(data, (error, data) => {
+        if (error) {
+            console.error("Error while edit todo", error);
+            res.status(500).send(error)
+        } else {
+            return res.json(data);
+        }
     });
-    
+
 });
 
 /*
  * Delete todo
  */
-router.delete("/deleteTodo", function(req, res){
+router.delete("/deleteTodo", (req, res) => {
     let data = req.body;
 
-    TodoSource.deleteTodo(data, function(data){
-        return res.json(data);
+    TodoSource.deleteTodo(data, (error, data) => {
+        if (error) {
+            console.error("Error while delete todo", error);
+            res.status(500).send(error)
+        } else {
+            return res.json(data);
+        }
     });
 });
 
@@ -69,9 +95,16 @@ router.delete("/deleteTodo", function(req, res){
 /*
  * Mark all the todo as done.
  */
-router.post("/markAllAsDone", function(req, res){
-    TodoSource.markAllAsDone((data)=> {return res.json(data)});
+router.post("/markAllAsDone", (req, res) => {
+    TodoSource.markAllAsDone((error, data) => {
+        if (error) {
+            console.error("Error while mark all todos as done", error);
+            res.status(500).send(error)
+        } else {
+            return res.json(data);
+        }
+    });
 })
- 
+
 
 module.exports = router;
