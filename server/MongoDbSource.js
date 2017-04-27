@@ -6,7 +6,7 @@ const URL = getDbUrl();
 /*
  * Get DB URL from config.json
  */
-function getDbUrl(){
+function getDbUrl() {
     var config = jsonfile.readFileSync("server/config.json");
 
     return config.dbConfig.connectionStr + "/" + config.dbConfig.db;
@@ -18,9 +18,8 @@ function getDbUrl(){
  */
 function getNextTodoId(callback) {
     let todoId;
-    let db = mongojs(URL);
-
-    db.counters.findAndModify({
+    openDB((error, db) => {
+        db.counters.findAndModify({
             query: {
                 "_id": "todo"
             },
@@ -31,22 +30,28 @@ function getNextTodoId(callback) {
             }
         },
         (err, doc) => {
-            callback(doc.todoId);
-            db.close();
+            callback(error, doc ? doc.todoId : null);
+
+            closeDB();
         });
+    });
 }
 
 /*
  * Read todo from Database
  */
 function readTodo(callback) {
-    let db = mongojs(URL);
-
-    db.todos.find().toArray(function (err, data) {
-        callback({
-            todos: data
-        })
-        db.close();
+    openDB((error, db) => {
+        if (error) {
+            callback(error, {});
+            return;
+        }
+        db.todos.find().toArray( (error, data) => {
+            callback(error, {
+                todos: data
+            })
+            closeDB();
+        });
     });
 }
 
@@ -54,16 +59,21 @@ function readTodo(callback) {
  * Add new todo item 
  */
 function addTodo(data, callback) {
-    let db = mongojs(URL);
-
-    getNextTodoId(function (newTodoId) {
-        db.todos.insert({
-            id: newTodoId,
-            text: data.text,
-            completed: false
-        }, function (err, data) {
-            db.close();
-            callback(data)
+    openDB((error, db) => {
+        getNextTodoId((error, newTodoId) => {
+            if (error) {
+                 closeDB();
+                callback(error, {});
+            } else {
+                db.todos.insert({
+                    id: newTodoId,
+                    text: data.text,
+                    completed: false
+                }, (error, data) => {
+                    closeDB();
+                    callback(error, data)
+                });
+            }
         });
     });
 }
@@ -72,25 +82,30 @@ function addTodo(data, callback) {
  * Toggle todo completion status
  */
 function toggleTodo(data, callback) {
-    let db = mongojs(URL);
-
-    db.todos.findOne({
-        "id": data.id
-    }, (err, doc) => {
-        db.todos.findAndModify({
-                query: {
-                    "id": doc.id
-                },
-                update: {
-                    $set: {
-                        completed: !doc.completed
-                    }
-                }
-            },
-            (err, doc) => {
-                callback(doc);
-                db.close();
-            });
+    openDB((error, db) => {
+        db.todos.findOne({
+            "id": data.id
+        }, (error, doc) => {
+            if (error) {
+                 closeDB();
+                callback(error, {});
+            } else {
+                db.todos.findAndModify({
+                        query: {
+                            "id": doc.id
+                        },
+                        update: {
+                            $set: {
+                                completed: !doc.completed
+                            }
+                        }
+                    },
+                    (error, doc) => {
+                        callback(error, doc);
+                        closeDB();
+                    });
+            }
+        });
     });
 }
 
@@ -98,37 +113,42 @@ function toggleTodo(data, callback) {
  * Edit todo
  */
 function editTodo(data, callback) {
-    let db = mongojs(URL);
-
-    db.todos.update({
-            "id": data.id
-        }, {
-            $set: {
-                "text": data.text,
-                "completed": data.completed
-            }
-        },
-        (err, doc) => {
-            db.todos.findOne({
+    openDB((error, db) => {
+        db.todos.update({
                 "id": data.id
-            }, (err, doc) => {
-                callback(doc);
-                db.close();
-            })
-        });
+            }, {
+                $set: {
+                    "text": data.text,
+                    "completed": data.completed
+                }
+            },
+            (error, doc) => {
+                if (error) {
+                     closeDB();
+                    callback(error, {})
+                } else {
+                    db.todos.findOne({
+                        "id": data.id
+                    }, (error, doc) => {
+                        callback(error, doc);
+                        closeDB();
+                    })
+                }
+            });
+    });
 }
 
 /*
  * Delete todo
  */
 function deleteTodo(data, callback) {
-    let db = mongojs(URL);
-
-    db.todos.remove({
-        "id": data.id
-    }, (err, doc) => {
-        callback(data);
-        db.close();
+    openDB((error, db) => {
+        db.todos.remove({
+            "id": data.id
+        }, (error, doc) => {
+            closeDB();
+            callback(error, data);
+        });
     });
 }
 
@@ -136,30 +156,54 @@ function deleteTodo(data, callback) {
  * Mark all todo as Done
  */
 function markAllAsDone(callback) {
-    let db = mongojs(URL);
-
-    db.todos.find().toArray((err, data) => {
-        data.forEach((item, index) => {
-            db.todos.update({
-                    id: item.id
-                }, {
-                    $set: {
-                        completed: true
-                    }
-                },
-                (err, doc) => {
-                    if (data.length - 1 == index) {
-                        callback({
-                            allMarked: true
-                        });
-                        db.close();
-                    }
+    openDB((error, db) => {
+        db.todos.find().toArray((error, data) => {
+            if (error) {
+                closeDB();
+                callback(error, {});
+            } else {
+                data.forEach((item, index) => {
+                    db.todos.update({
+                            id: item.id
+                        }, {
+                            $set: {
+                                completed: true
+                            }
+                        },
+                        (error, doc) => {
+                            if (error) {
+                                closeDB();
+                                callback(error, {});
+                            } else {
+                                if (data.length - 1 == index) {
+                                    closeDB();
+                                    callback(error, {
+                                        allMarked: true
+                                    });
+                                }
+                            }
+                        })
                 })
+            }
         })
-    })
-
-
+    });
 }
+
+function openDB(callback){
+    try {
+        let db = mongojs(URL);
+        callback(null, db);
+
+    } catch (e){
+        callback(e, null);
+    }
+    
+}
+
+function closeDB(db){
+    if (db) db.close();
+}
+
 
 /*
  * Export methods
