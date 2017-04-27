@@ -21,8 +21,15 @@ app.use("/", todo);
 /*
  * Server index.html when root context requested
  */
-app.get('/', function (req, res) {
+app.get('/', (req, res)=> {
     res.sendFile(path.resolve('client/index.html'));
+});
+
+/*
+ * Handle the unhandled exception to prevevnt node server getting terminated.
+ */
+process.on('uncaughtException', (error) => {
+  console.log('Caught unhandled exception: ' + error);
 });
 
 /*
