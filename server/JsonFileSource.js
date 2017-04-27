@@ -15,11 +15,9 @@ function getFileUrl(){
  * Read todo items from File
  */
 function readTodo(callback) {
-    readFile(URL, content => {
+    readFile(URL, (error, content) => {
 
-        
-
-        callback(content.value)
+        callback(error, content ? content.value : {})
     });
 }
 
@@ -33,12 +31,16 @@ function addTodo(data, callback) {
         completed: false
     }
 
-    readFile(URL, content => {
-        newItem.id = content.lastId++;
-        content.value.todos.push(newItem);
-        writeFile(URL, content, () => {
-            callback(newItem);
-        });
+    readFile(URL, (error, content) => {
+        if (error) {
+            callback(error, {});
+        } else {
+            newItem.id = content.lastId++;
+            content.value.todos.push(newItem);
+            writeFile(URL, content, (error) => {
+                callback(error, newItem);
+            });
+        }
     });
 }
 
@@ -48,21 +50,26 @@ function addTodo(data, callback) {
 function toggleTodo(data, callback) {
     let toggleItem;
 
-    readFile(URL, content => {
-        for (let i = 0; i < content.value.todos.length; i++) {
-            if (content.value.todos[i].id == data.id) {
-                toggleItem = content.value.todos[i];
-                break;
+    readFile(URL, (error, content) => {
+        if (error) {
+            callback(error, {});
+        } else {
+            for (let i = 0; i < content.value.todos.length; i++) {
+                if (content.value.todos[i].id == data.id) {
+                    toggleItem = content.value.todos[i];
+                    break;
+                }
             }
-        }
 
-        if (toggleItem) {
-             toggleItem.completed = !toggleItem.completed;
-        }
+            if (toggleItem) {
+                toggleItem.completed = !toggleItem.completed;
+            }
 
-        writeFile(URL, content, () => {
-            callback(toggleItem);
-        });
+            writeFile(URL, content, (error) => {
+                callback(error, toggleItem);
+            });
+        }
+        
     });
 }
 
@@ -72,24 +79,27 @@ function toggleTodo(data, callback) {
 function editTodo(data, callback) {
     let editItem;
 
-    readFile(URL, content => {
-        for (let i = 0; i < content.value.todos.length; i++) {
-            if (content.value.todos[i].id == data.id) {
-                editItem = content.value.todos[i];
-                break;
+    readFile(URL, (error, content) => {
+        if (error) {
+            callback(error, {});
+        } else {
+            for (let i = 0; i < content.value.todos.length; i++) {
+                if (content.value.todos[i].id == data.id) {
+                    editItem = content.value.todos[i];
+                    break;
+                }
             }
-        }
 
-         if (editItem){
-            Object.keys(editItem).forEach(function (item) {
-                editItem[item] = data[item];
+            if (editItem){
+                Object.keys(editItem).forEach( item => {
+                    editItem[item] = data[item];
+                });
+            }
+
+            writeFile(URL, content, (error) => {
+                callback(error, editItem);
             });
         }
-
-        writeFile(URL, content, () => {
-            callback(editItem);
-        });
-
     });
 }
 
@@ -99,19 +109,24 @@ function editTodo(data, callback) {
 function deleteTodo(data, callback) {
     var index = 0;
 
-    readFile(URL, content => {
-        for (let i = 0; i < content.value.todos.length; i++) {
-            if (content.value.todos[i].id == data.id) {
-                index = i;
-                break;
+    readFile(URL, (error, content) => {
+        if (error) {
+            callback(error, data);
+        } else {
+             for (let i = 0; i < content.value.todos.length; i++) {
+                if (content.value.todos[i].id == data.id) {
+                    index = i;
+                    break;
+                }
             }
+
+            content.value.todos.splice(index, 1);
+
+            writeFile(URL, content, (error) => {
+                callback(error, data);
+            });
         }
-
-        content.value.todos.splice(index, 1);
-
-        writeFile(URL, content, () => {
-            callback(data);
-        });
+       
     });
 }
 
@@ -122,16 +137,20 @@ function markAllAsDone(callback) {
     let content;
     var index = 0;
 
-    readFile(URL, content => {
-        for (let i = 0; i < content.value.todos.length; i++) {
-            content.value.todos[i].completed = true;
-        }
+    readFile(URL, (error, content) => {
+        if (error){
+            callback(error, {})
+        } else {
+            for (let i = 0; i < content.value.todos.length; i++) {
+                content.value.todos[i].completed = true;
+            }
 
-        writeFile(URL, content, () => {
-            callback({
-                allMarked: true
+            writeFile(URL, content, () => {
+                callback(error, {
+                    allMarked: true
+                });
             });
-        });
+        }
     });
 }
 
@@ -142,11 +161,10 @@ function readFile(URL, callback) {
     let content;
 
     jsonfile.readFile(URL, (error, data) => {
-        if (error) {
-            console.error(error);
-            throw "Error while reading file " + error;
-        }
-        callback(data);
+         if (error)
+            console.log("Error while reading data", error);
+
+        callback(error, data);
     });
 }
 
@@ -156,12 +174,10 @@ function readFile(URL, callback) {
 function writeFile(URL, content, callback) {
 
     jsonfile.writeFile(URL, content, (error, data) => {
-        if (error) {
-            console.error(error);
-            throw "Error while writing file " + error;
-        }
+        if (error)
+            conosle.log("Error while writing data", error);
 
-        callback();
+        callback(error);
     });
 }
 
