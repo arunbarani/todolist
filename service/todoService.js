@@ -11,8 +11,14 @@ import { addAllTodo, addTodo, toggleTodo, editTodo, removeTodo } from "../action
 export function getTodoListService() {
     return new Promise((resolve, reject) => {
 		fetch(TODO_SERVICES_URL.GET_TODO_LIST)
-			.then(result => resolve(result.json()),
-                  error => reject(error));
+        .then(response => {
+            if (!response.ok) {
+                throw Error(response.statusText)
+            }
+            resolve(response.json());
+        }).catch(error =>{
+            reject(error);
+        });
     })
 }
 
@@ -30,8 +36,15 @@ export function addTodoService(text) {
             {method:"POST", 
             body:JSON.stringify(data),
             headers: HTTP_HEADERS.JSON
-            }).then(result => resolve(result.json()),
-                  error => reject(error));
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw Error(response.statusText)
+            }
+            resolve(response.json());
+        }).catch(error =>{
+            reject(error);
+        });
     })
 }
 
@@ -50,8 +63,15 @@ export function toggleTodoService(id) {
             {method:"POST", 
             body:JSON.stringify(data),
             headers: HTTP_HEADERS.JSON
-        }).then(result => resolve(result.json()),
-                  error => reject(error));
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw Error(response.statusText)
+            }
+            resolve(response.json());
+        }).catch(error =>{
+            reject(error);
+        });
     })
 }
 
@@ -67,8 +87,15 @@ export function editTodoService(data) {
                 {method:"POST", 
                 body:JSON.stringify(data),
                 headers: HTTP_HEADERS.JSON
-            }).then(result => resolve(result.json()),
-                    error => reject(error));
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText)
+                }
+                resolve(response.json());
+            }).catch(error =>{
+                reject(error);
+            });
         });
 }
 
@@ -86,8 +113,15 @@ export function deleteTodoService(id) {
                 {method:"DELETE", 
                 body:JSON.stringify(data),
                 headers: HTTP_HEADERS.JSON
-            }).then(result => resolve(result.json()),
-                    error => reject(error));
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText)
+                }
+                resolve(response.json());
+            }).catch(error =>{
+                reject(error);
+            });
         });
 }
 
@@ -103,7 +137,14 @@ export function markAllAsDoneService() {
                 {method:"POST", 
                 body:"",
                 headers: HTTP_HEADERS.JSON
-            }).then(result => resolve(result),
-                    error => reject(error));
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText)
+                }
+                resolve(response.json());
+            }).catch(error =>{
+                reject(error);
+            });
         });
 }
